@@ -5,7 +5,7 @@
 set -e;
 
 function pure_version() {
-	echo '1.0.0.5'
+	echo '1.0.0.6'
 }
 
 function version() {
@@ -60,6 +60,8 @@ function usage() {
 	echo "      execute hdiutil in quiet mode"
 	echo "  --sandbox-safe"
 	echo "      execute hdiutil with sandbox compatibility and do not bless"
+	echo "  --codesign-cert certificate_name"
+	echo "		sign the finished dmg with the specified certificate"
 	echo "  --version         show tool version number"
 	echo "  -h, --help        display this help"
 	exit 0
@@ -167,6 +169,9 @@ while test "${1:0:1}" = "-"; do
 	--sandbox-safe)
 		SANDBOX_SAFE=1
 		shift;; 
+	--codesign-cert)
+		CODESIGN_CERT="$2"
+		shift; shift;;
 	-*)
 		echo "Unknown option $1. Run with --help for help."
 		exit 1;;
@@ -394,6 +399,12 @@ if [ ! -z "${NOINTERNET}" -a "${NOINTERNET}" == 1 ]; then
 	echo "not setting 'internet-enable' on the dmg"
 else
 	hdiutil internet-enable -yes "${DMG_DIR}/${DMG_NAME}"
+fi
+
+if test "$CODESIGN_CERT"; then
+	echo "codesigning disk image"
+	codesign -s "${CODESIGN_CERT}" "${DMG_DIR}/${DMG_NAME}"
+	codesign -vvv "${DMG_DIR}/${DMG_NAME}"
 fi
 
 echo "Disk image done"
