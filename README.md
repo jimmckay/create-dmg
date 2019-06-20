@@ -64,6 +64,7 @@ All contents of source\_folder will be copied into the disk image.
 *   **--hdiutil-quiet:** execute hdiutil in quiet mode
 *   **--sandbox-safe:** execute hdiutil with sandbox compatibility and don not bless
 *   **--version:** show tool version number
+*   **--codesign-cert [certificate_name]:** sign the finished dmg with the specified certificate
 *   **-h, --help:** display the help
 
 
