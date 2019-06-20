@@ -111,7 +111,7 @@ data 'STR#' (5002, "English") {
 };\n""")
         os.system('hdiutil unflatten -quiet "%s"' % dmgFile)
         ret = os.system('%s -a %s -o "%s"' %
-                        (options.rez, tmpFile, dmgFile))
+                        (options.rez.replace(" ","\ "), tmpFile, dmgFile))
         os.system('hdiutil flatten -quiet "%s"' % dmgFile)
         if options.compression is not None:
             os.system('cp %s %s.temp.dmg' % (dmgFile, dmgFile))
@@ -140,7 +140,7 @@ if __name__ == '__main__':
         '--rez',
         '-r',
         action='store',
-        default='/Applications/Xcode.app/Contents/Developer/Tools/Rez',
+        default=os.popen('/usr/bin/xcrun --find Rez').read().strip(),
         help='The path to the Rez tool. Defaults to %default'
     )
     parser.add_option(
